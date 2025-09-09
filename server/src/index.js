@@ -22,6 +22,17 @@ app.use(
 );
 app.use(express.json()); // parse JSON
 
+// Health check (API + DB)
+app.get("/api/health", async (_req, res) => {
+  try {
+    await pool.query("SELECT 1");
+    res.json({ ok: true, db: true, name: "Fairway Forum API" });
+  } catch {
+    res.status(500).json({ ok: true, db: false, name: "Fairway Forum API" });
+  }
+});
+
+
 // check
 app.get("/", (_req, res) => {
   res.json({ ok: true, name: "Fairway Forum API" });
